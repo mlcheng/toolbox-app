@@ -12,11 +12,11 @@ public class MainActivity extends AppCompatActivity {
 	PermissionManager _pm;
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	protected void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-		Util.setupNavigationDrawer(this);
+		NavigationDrawer.setupNavigationDrawer(this);
 
 		if(PermissionManager.canDrawOverlays(this)) {
 			startService(new Intent(this, EyeProtectionService.class));
@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
 	}
 
 	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+	protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
 		if(requestCode == Config.REQUEST_OVERLAY) {
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
 				if(!Settings.canDrawOverlays(this)) {

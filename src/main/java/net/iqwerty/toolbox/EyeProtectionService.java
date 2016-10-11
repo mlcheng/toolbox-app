@@ -12,52 +12,42 @@ import android.support.annotation.Nullable;
  */
 
 public class EyeProtectionService extends Service {
-	private EyeProtectionOverlay _overlay;
-
-	@Override
-	public void onCreate() {
-//		super.onCreate();
-//		_overlay = new EyeProtectionOverlay(this);
-//
-//		NotificationCompat.Builder notification = new NotificationCompat.Builder(getApplicationContext())
-//				.setSmallIcon(R.drawable.material_drawer_badge)
-//				.setContentTitle(getString(R.string.app_name))
-//				.setContentText(getString(R.string.app_name))
-//				.setPriority(Notification.PRIORITY_MIN);
-//
-//		startForeground(1, notification.build());
-	}
 
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
-
-		_overlay.hideOverlay(false);
+		Logger.log("Destroying activity");
+		EyeProtectionOverlay.setContext(this);
+		EyeProtectionOverlay.hideOverlay(Config.OVERLAY_TRANSITION_NONE);
 	}
 
 	@Override
-	public int onStartCommand(Intent intent, int flags, int startId) {
+	public int onStartCommand(final Intent intent, final int flags, final int startId) {
 		Logger.log("Starting service");
+		EyeProtectionOverlay.setContext(this);
+
 		if(intent != null) {
 			Bundle extras = intent.getExtras();
 			if(extras != null) {
 				if(extras.getBoolean(Config.SERVICE_TOGGLE)) {
-					_overlay.toggleOverlay(false);
+					// From notification toggle
+					EyeProtectionOverlay.toggleOverlay(Config.OVERLAY_TRANSITION_SHORT);
 				} else if(extras.getBoolean(Config.SERVICE_ON)) {
-					_overlay.showOverlay(true);
+					// From alarm
+					EyeProtectionOverlay.showOverlay(Config.OVERLAY_TRANSITION_LONG);
 				} else if(extras.getBoolean(Config.SERVICE_OFF)) {
-					_overlay.hideOverlay(true);
+					// From alarm
+					EyeProtectionOverlay.hideOverlay(Config.OVERLAY_TRANSITION_LONG);
 				}
 			} else {
-				_overlay = new EyeProtectionOverlay(this);
-
 				Sleeper sleeper = new Sleeper(this);
 				sleeper.start();
 
+				// From service start
 				if(sleeper.shouldShowOverlay()) {
-					_overlay.showOverlay(true);
+					EyeProtectionOverlay.showOverlay(Config.OVERLAY_TRANSITION_SHORT);
 				} else {
-					_overlay.hideOverlay(true);
+					EyeProtectionOverlay.hideOverlay(Config.OVERLAY_TRANSITION_SHORT);
 				}
 
 				startForeground(1, sleeper.getNotification().build());
@@ -68,7 +58,7 @@ public class EyeProtectionService extends Service {
 
 	@Nullable
 	@Override
-	public IBinder onBind(Intent intent) {
+	public IBinder onBind(final Intent intent) {
 		return null;
 	}
 }

@@ -19,7 +19,7 @@ public class Sleeper {
 	private NotificationCompat.Builder _notification;
 	private boolean _shouldShowOverlay;
 
-	public Sleeper(Service context) {
+	public Sleeper(final Service context) {
 		_context = context;
 		_shouldShowOverlay = false;
 	}
@@ -38,7 +38,7 @@ public class Sleeper {
 		return _shouldShowOverlay;
 	}
 
-	private void setSchedules(int morningTime, PendingIntent morningIntent, int nightTime, PendingIntent nightIntent) {
+	private void setSchedules(final int morningTime, final PendingIntent morningIntent, final int nightTime, final PendingIntent nightIntent) {
 		Calendar morning = Calendar.getInstance();
 		Calendar night = Calendar.getInstance();
 		Calendar now = Calendar.getInstance();
@@ -57,35 +57,33 @@ public class Sleeper {
 			morning.add(Calendar.DATE, 1);
 		}
 
-		night = setAlarm(night, nightTime);
-		morning = setAlarm(morning, morningTime);
+		night = initializeAlarm(night, nightTime);
+		morning = initializeAlarm(morning, morningTime);
 
 		AlarmManager alarmManager = (AlarmManager) _context.getSystemService(Context.ALARM_SERVICE);
 		alarmManager.cancel(morningIntent);
 		alarmManager.cancel(nightIntent);
-		alarmManager.setInexactRepeating(
-				AlarmManager.RTC_WAKEUP,
-				morning.getTimeInMillis(),
-				AlarmManager.INTERVAL_DAY,
-				morningIntent
-		);
-		alarmManager.setInexactRepeating(
-				AlarmManager.RTC_WAKEUP,
-				night.getTimeInMillis(),
-				AlarmManager.INTERVAL_DAY,
-				nightIntent
-		);
-
+		setRepeatingAlarm(alarmManager, morning, morningIntent);
+		setRepeatingAlarm(alarmManager, night, nightIntent);
 	}
 
-	private Calendar setAlarm(Calendar alarm, int hour) {
+	private void setRepeatingAlarm(final AlarmManager alarmManager, final Calendar time, final PendingIntent intent) {
+		alarmManager.setInexactRepeating(
+				AlarmManager.RTC_WAKEUP,
+				time.getTimeInMillis(),
+				AlarmManager.INTERVAL_DAY,
+				intent
+		);
+	}
+
+	private Calendar initializeAlarm(final Calendar alarm, final int hour) {
 		alarm.set(Calendar.HOUR_OF_DAY, hour);
 		alarm.set(Calendar.MINUTE, 0);
 		alarm.set(Calendar.SECOND, 0);
 		return alarm;
 	}
 
-	private void buildNotification(PendingIntent morning, PendingIntent night, PendingIntent toggle) {
+	private void buildNotification(final PendingIntent morning, final PendingIntent night, final PendingIntent toggle) {
 		_notification = new NotificationCompat.Builder(_context.getApplicationContext())
 				.setSmallIcon(R.drawable.material_drawer_badge)
 				.setContentTitle(_context.getString(R.string.app_name))
@@ -97,7 +95,7 @@ public class Sleeper {
 		return _notification;
 	}
 
-	private PendingIntent newPendingIntent(int requestCode, String extra) {
+	private PendingIntent newPendingIntent(final int requestCode, final String extra) {
 		return PendingIntent.getService(_context, requestCode, new Intent(
 				_context,
 				EyeProtectionService.class

@@ -13,6 +13,12 @@ public class Config {
 
 	public static final int MORNING = 7;
 	public static final int NIGHT = 19;
+	public static final int SCREENSHOT_DELAY = 1100;
+
+	public static final int OVERLAY_TRANSITION_NONE = 0;
+	public static final int OVERLAY_TRANSITION_SHORT = 1000;
+	public static final int OVERLAY_TRANSITION_LONG = 15000;
+
 
 	public static final int REQUEST_OVERLAY = 54321;
 }

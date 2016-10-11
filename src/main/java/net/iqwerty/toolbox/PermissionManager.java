@@ -18,14 +18,14 @@ public class PermissionManager {
 //		return true;
 //	}
 
-	private final Activity _activity;
-
-	public PermissionManager(Activity activity) {
-		_activity = activity;
+	public static boolean canDrawOverlays(final Context context) {
+		return Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && Settings.canDrawOverlays(context);
 	}
 
-	public static boolean canDrawOverlays(Context context) {
-		return Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && Settings.canDrawOverlays(context);
+	private final Activity _activity;
+
+	public PermissionManager(final Activity activity) {
+		_activity = activity;
 	}
 
 	public void requestOverlay() {

@@ -9,11 +9,9 @@ import android.graphics.Color;
 import android.graphics.PixelFormat;
 import android.graphics.Point;
 import android.os.Handler;
-import android.provider.Settings;
 import android.view.Display;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.Toast;
 
 /**
  * Created by Michael on 10/10/2016.
@@ -21,34 +19,34 @@ import android.widget.Toast;
 
 public class EyeProtectionOverlay {
 
-	private Service _context;
-	private View _overlay;
-	private boolean _isShown;
-	
-	private final WindowManager _windowManager;
+	private static Service _context;
+	private static View _overlay;
+	private static boolean _isShown;
+	private static WindowManager _windowManager;
 
-	private final int FILTER = Color.argb(36, 255, 40, 30);
-	private final int TRANSPARENT = Color.argb(0, 0, 0, 0);
-	private final int TRANSITION_DURATION = 15000;
+	private static final int FILTER = Color.argb(36, 255, 40, 30);
+	private static final int TRANSPARENT = Color.argb(0, 0, 0, 0);
+//	private static final int TRANSITION_DURATION = 15000;
 
-	public EyeProtectionOverlay(Service context) {
+	public static void setContext(final Service context) {
 		_context = context;
-		_overlay = null;
-		_isShown = false;
 		_windowManager = (WindowManager) _context.getSystemService(Context.WINDOW_SERVICE);
 	}
 
-	public void showOverlay(boolean shouldTransition) {
+	public static void showOverlay(final int transitionDuration) {
 
 		if (!_isShown) {
 			_overlay = new View(_context);
-			if (shouldTransition) {
-				ObjectAnimator transition = ObjectAnimator.ofObject(_overlay, "backgroundColor", new ArgbEvaluator(), TRANSPARENT, FILTER);
-				transition.setDuration(TRANSITION_DURATION);
-				transition.start();
-			} else {
-				_overlay.setBackgroundColor(FILTER);
-			}
+			ObjectAnimator transition = ObjectAnimator.ofObject(_overlay, "backgroundColor", new ArgbEvaluator(), TRANSPARENT, FILTER);
+			transition.setDuration(transitionDuration);
+			transition.start();
+//			if (shouldTransition) {
+//				ObjectAnimator transition = ObjectAnimator.ofObject(_overlay, "backgroundColor", new ArgbEvaluator(), TRANSPARENT, FILTER);
+//				transition.setDuration(TRANSITION_DURATION);
+//				transition.start();
+//			} else {
+//				_overlay.setBackgroundColor(FILTER);
+//			}
 
 			WindowManager.LayoutParams params = new WindowManager.LayoutParams(
 					WindowManager.LayoutParams.MATCH_PARENT, // Can't be wrap content otherwise some parts won't get filtered (left and right)
@@ -65,44 +63,57 @@ public class EyeProtectionOverlay {
 					//WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN | WindowManager.LayoutParams.FLAG_FULLSCREEN | WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
 					PixelFormat.TRANSLUCENT
 			);
-			
+
 			_windowManager.addView(_overlay, params);
 			_isShown = true;
 		}
 	}
-	
-	public void hideOverlay(boolean shouldTransition) {
-		if(_overlay != null) {
+
+	public static void hideOverlay(final int transitionDuration) {
+		if (_overlay != null) {
 			try {
-				if(_isShown) {
-					if(shouldTransition) {
-						ObjectAnimator transition = ObjectAnimator.ofObject(_overlay, "backgroundColor", new ArgbEvaluator(), FILTER, TRANSPARENT);
-						transition.setDuration(TRANSITION_DURATION);transition.start();
-						Handler handler = new Handler();
-						handler.postDelayed(new Runnable() {
-							@Override
-							public void run() {
-								_windowManager.removeView(_overlay);
-							}
-						}, TRANSITION_DURATION);
-					}
+				if (_isShown) {
+//					if (shouldTransition) {
+//						ObjectAnimator transition = ObjectAnimator.ofObject(_overlay, "backgroundColor", new ArgbEvaluator(), FILTER, TRANSPARENT);
+//						transition.setDuration(TRANSITION_DURATION);
+//						transition.start();
+//						Handler handler = new Handler();
+//						handler.postDelayed(new Runnable() {
+//							@Override
+//							public void run() {
+//								_windowManager.removeView(_overlay);
+//							}
+//						}, TRANSITION_DURATION);
+//					} else {
+//						_windowManager.removeView(_overlay);
+//					}
+					ObjectAnimator transition = ObjectAnimator.ofObject(_overlay, "backgroundColor", new ArgbEvaluator(), FILTER, TRANSPARENT);
+					transition.setDuration(transitionDuration);
+					transition.start();
+					Handler handler = new Handler();
+					handler.postDelayed(new Runnable() {
+						@Override
+						public void run() {
+							_windowManager.removeView(_overlay);
+						}
+					}, transitionDuration);
 					_isShown = false;
 				}
-			} catch(IllegalStateException e) {
+			} catch (IllegalStateException e) {
 
 			}
 		}
 	}
 
-	public void toggleOverlay(boolean shouldTransition) {
-		if(_isShown) {
-			hideOverlay(shouldTransition);
+	public static void toggleOverlay(final int transitionDuration) {
+		if (_isShown) {
+			hideOverlay(transitionDuration);
 		} else {
-			showOverlay(shouldTransition);
+			showOverlay(transitionDuration);
 		}
 	}
 
-	private int getNavigationBarHeight() {
+	private static int getNavigationBarHeight() {
 		Resources resources = _context.getResources();
 		int resourceId = resources.getIdentifier("navigation_bar_height", "dimen", "android");
 		if (resourceId > 0) {
@@ -111,7 +122,7 @@ public class EyeProtectionOverlay {
 		return 0;
 	}
 
-	private int getScreenHeight(WindowManager wm) {
+	private static int getScreenHeight(final WindowManager wm) {
 		Display display = wm.getDefaultDisplay();
 
 		Point size = new Point();

@@ -7,7 +7,7 @@ import android.util.Log;
  */
 
 public class Logger {
-	public static int log(String message) {
+	public static int log(final String message) {
 		return Log.v(Config.APP, message);
 	}
 }
