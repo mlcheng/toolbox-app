@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
@@ -20,7 +19,6 @@ public class ScreenshotActivity extends Activity {
 	@Override
 	protected void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_blank);
 
 		// Turn off filter first
 		stopService(new Intent(this, EyeProtectionService.class));
@@ -58,9 +56,9 @@ public class ScreenshotActivity extends Activity {
 
 			// Scan media
 			Util.scanMedia("file://" + path + filename);
-		} catch(IOException e) {
+		} catch (IOException e) {
 			e.printStackTrace();
-		} catch(InterruptedException e) {
+		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
 	}

@@ -16,7 +16,7 @@ import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
  * Created by Michael on 10/11/2016.
  */
 
-public class NavigationDrawer {
+class NavigationDrawer {
 	private static Drawer _navigationDrawer;
 
 	public static Drawer getNavigationDrawer() {
@@ -27,7 +27,7 @@ public class NavigationDrawer {
 		_navigationDrawer = drawer;
 	}
 
-	public static void setupNavigationDrawer(final AppCompatActivity context) {
+	static void setupNavigationDrawer(final AppCompatActivity context) {
 
 		/* Drawer items */
 		PrimaryDrawerItem home = new PrimaryDrawerItem().withIdentifier(1).withName(R.string.app_name);
@@ -35,8 +35,6 @@ public class NavigationDrawer {
 
 		SecondaryDrawerItem screenOff = new SecondaryDrawerItem().withIdentifier(3).withName(R.string.screen_off);
 		SecondaryDrawerItem screenshot = new SecondaryDrawerItem().withIdentifier(4).withName(R.string.screenshot);
-
-
 
 
 		Toolbar toolbar = (Toolbar) context.findViewById(R.id.toolbar);
@@ -48,10 +46,10 @@ public class NavigationDrawer {
 				.addDrawerItems(home, settings, new DividerDrawerItem(), screenOff, screenshot)
 				.withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
 					@Override
-					public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
+					public boolean onItemClick(final View view, final int position, final IDrawerItem drawerItem) {
 						Logger.log(Integer.toString(position));
 						Intent intent;
-						switch(position) {
+						switch (position) {
 							case 0:
 								// Home
 								break;

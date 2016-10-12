@@ -15,8 +15,9 @@ public class EyeProtectionService extends Service {
 
 	@Override
 	public void onDestroy() {
+		Logger.log("Destroying service");
+
 		super.onDestroy();
-		Logger.log("Destroying activity");
 		EyeProtectionOverlay.setContext(this);
 		EyeProtectionOverlay.hideOverlay(Config.OVERLAY_TRANSITION_NONE);
 	}
@@ -24,18 +25,18 @@ public class EyeProtectionService extends Service {
 	@Override
 	public int onStartCommand(final Intent intent, final int flags, final int startId) {
 		Logger.log("Starting service");
-		EyeProtectionOverlay.setContext(this);
 
-		if(intent != null) {
+		EyeProtectionOverlay.setContext(this);
+		if (intent != null) {
 			Bundle extras = intent.getExtras();
-			if(extras != null) {
-				if(extras.getBoolean(Config.SERVICE_TOGGLE)) {
+			if (extras != null) {
+				if (extras.getBoolean(Config.SERVICE_TOGGLE)) {
 					// From notification toggle
 					EyeProtectionOverlay.toggleOverlay(Config.OVERLAY_TRANSITION_SHORT);
-				} else if(extras.getBoolean(Config.SERVICE_ON)) {
+				} else if (extras.getBoolean(Config.SERVICE_ON)) {
 					// From alarm
 					EyeProtectionOverlay.showOverlay(Config.OVERLAY_TRANSITION_LONG);
-				} else if(extras.getBoolean(Config.SERVICE_OFF)) {
+				} else if (extras.getBoolean(Config.SERVICE_OFF)) {
 					// From alarm
 					EyeProtectionOverlay.hideOverlay(Config.OVERLAY_TRANSITION_LONG);
 				}
@@ -44,7 +45,7 @@ public class EyeProtectionService extends Service {
 				sleeper.start();
 
 				// From service start
-				if(sleeper.shouldShowOverlay()) {
+				if (sleeper.shouldShowOverlay()) {
 					EyeProtectionOverlay.showOverlay(Config.OVERLAY_TRANSITION_SHORT);
 				} else {
 					EyeProtectionOverlay.hideOverlay(Config.OVERLAY_TRANSITION_SHORT);

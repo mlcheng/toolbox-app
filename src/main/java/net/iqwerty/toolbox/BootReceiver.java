@@ -10,7 +10,7 @@ import android.content.Intent;
 
 public class BootReceiver extends BroadcastReceiver {
 	@Override
-	public void onReceive(Context context, Intent intent) {
+	public void onReceive(final Context context, final Intent intent) {
 		Intent startEyeProtectionService = new Intent(context, EyeProtectionService.class);
 		context.startService(startEyeProtectionService);
 	}

@@ -17,11 +17,10 @@ public class ScreenOffActivity extends Activity {
 	@Override
 	protected void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_blank);
 
 		try {
 			devicePolicyManager = (DevicePolicyManager) getSystemService(Context.DEVICE_POLICY_SERVICE);
-			if(devicePolicyManager.isAdminActive(new ComponentName(this, AdminReceiver.class))) {
+			if (devicePolicyManager.isAdminActive(new ComponentName(this, AdminReceiver.class))) {
 				devicePolicyManager.lockNow();
 			} else {
 				Intent intent = new Intent(DevicePolicyManager.ACTION_ADD_DEVICE_ADMIN);
@@ -29,8 +28,8 @@ public class ScreenOffActivity extends Activity {
 				intent.putExtra(DevicePolicyManager.EXTRA_ADD_EXPLANATION, getString(R.string.admin_permission_needed));
 				startActivity(intent);
 			}
-		} catch(Exception e) {
-
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 
 		finish();

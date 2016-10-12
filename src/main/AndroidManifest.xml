@@ -55,8 +55,7 @@
 			android:name=".ScreenOffActivity"
 			android:excludeFromRecents="true"
 			android:label="@string/screen_off"
-			android:noHistory="true"
-			android:theme="@android:style/Theme.NoDisplay">
+			android:noHistory="true">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN"/>
 			</intent-filter>
@@ -66,8 +65,7 @@
 			android:name=".ScreenshotActivity"
 			android:excludeFromRecents="true"
 			android:label="@string/screenshot"
-			android:noHistory="true"
-			android:theme="@android:style/Theme.NoDisplay">
+			android:noHistory="true">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN"/>
 			</intent-filter>

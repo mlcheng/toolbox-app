@@ -18,7 +18,7 @@ public class MainActivity extends AppCompatActivity {
 
 		NavigationDrawer.setupNavigationDrawer(this);
 
-		if(PermissionManager.canDrawOverlays(this)) {
+		if (PermissionManager.canDrawOverlays(this)) {
 			startService(new Intent(this, EyeProtectionService.class));
 		} else {
 			_pm = new PermissionManager(this);
@@ -28,9 +28,9 @@ public class MainActivity extends AppCompatActivity {
 
 	@Override
 	protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
-		if(requestCode == Config.REQUEST_OVERLAY) {
+		if (requestCode == Config.REQUEST_OVERLAY) {
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-				if(!Settings.canDrawOverlays(this)) {
+				if (!Settings.canDrawOverlays(this)) {
 					Toast.makeText(this, getString(R.string.need_overlay_permission), Toast.LENGTH_LONG).show();
 				} else {
 					startService(new Intent(this, EyeProtectionService.class));

@@ -14,17 +14,17 @@ import java.util.Calendar;
  * Created by Michael on 10/10/2016.
  */
 
-public class Sleeper {
+class Sleeper {
 	private Service _context;
 	private NotificationCompat.Builder _notification;
 	private boolean _shouldShowOverlay;
 
-	public Sleeper(final Service context) {
+	Sleeper(final Service context) {
 		_context = context;
 		_shouldShowOverlay = false;
 	}
 
-	public void start() {
+	void start() {
 		PendingIntent morning = newPendingIntent(2, Config.SERVICE_OFF);
 		PendingIntent night = newPendingIntent(1, Config.SERVICE_ON);
 		PendingIntent toggleService = newPendingIntent(0, Config.SERVICE_TOGGLE);
@@ -34,7 +34,7 @@ public class Sleeper {
 		buildNotification(morning, night, toggleService);
 	}
 
-	public boolean shouldShowOverlay() {
+	boolean shouldShowOverlay() {
 		return _shouldShowOverlay;
 	}
 
@@ -44,12 +44,12 @@ public class Sleeper {
 		Calendar now = Calendar.getInstance();
 
 		int currentHour = now.get(Calendar.HOUR_OF_DAY);
-		if(currentHour < morningTime || currentHour >= nightTime) {
+		if (currentHour < morningTime || currentHour >= nightTime) {
 			_shouldShowOverlay = true;
 		}
 
-		if(currentHour >= morningTime) {
-			if(currentHour >= nightTime) {
+		if (currentHour >= morningTime) {
+			if (currentHour >= nightTime) {
 				// The next night alarm is the next day
 				night.add(Calendar.DATE, 1);
 			}
@@ -91,7 +91,7 @@ public class Sleeper {
 				.setPriority(Notification.PRIORITY_MIN);
 	}
 
-	public NotificationCompat.Builder getNotification() {
+	NotificationCompat.Builder getNotification() {
 		return _notification;
 	}
 

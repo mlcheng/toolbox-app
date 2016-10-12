@@ -17,8 +17,9 @@ import android.view.WindowManager;
  * Created by Michael on 10/10/2016.
  */
 
-public class EyeProtectionOverlay {
+class EyeProtectionOverlay {
 
+	// TODO: Fix this
 	private static Service _context;
 	private static View _overlay;
 	private static boolean _isShown;
@@ -26,27 +27,19 @@ public class EyeProtectionOverlay {
 
 	private static final int FILTER = Color.argb(36, 255, 40, 30);
 	private static final int TRANSPARENT = Color.argb(0, 0, 0, 0);
-//	private static final int TRANSITION_DURATION = 15000;
 
 	public static void setContext(final Service context) {
 		_context = context;
 		_windowManager = (WindowManager) _context.getSystemService(Context.WINDOW_SERVICE);
 	}
 
-	public static void showOverlay(final int transitionDuration) {
+	static void showOverlay(final int transitionDuration) {
 
 		if (!_isShown) {
 			_overlay = new View(_context);
 			ObjectAnimator transition = ObjectAnimator.ofObject(_overlay, "backgroundColor", new ArgbEvaluator(), TRANSPARENT, FILTER);
 			transition.setDuration(transitionDuration);
 			transition.start();
-//			if (shouldTransition) {
-//				ObjectAnimator transition = ObjectAnimator.ofObject(_overlay, "backgroundColor", new ArgbEvaluator(), TRANSPARENT, FILTER);
-//				transition.setDuration(TRANSITION_DURATION);
-//				transition.start();
-//			} else {
-//				_overlay.setBackgroundColor(FILTER);
-//			}
 
 			WindowManager.LayoutParams params = new WindowManager.LayoutParams(
 					WindowManager.LayoutParams.MATCH_PARENT, // Can't be wrap content otherwise some parts won't get filtered (left and right)
@@ -69,24 +62,10 @@ public class EyeProtectionOverlay {
 		}
 	}
 
-	public static void hideOverlay(final int transitionDuration) {
+	static void hideOverlay(final int transitionDuration) {
 		if (_overlay != null) {
 			try {
 				if (_isShown) {
-//					if (shouldTransition) {
-//						ObjectAnimator transition = ObjectAnimator.ofObject(_overlay, "backgroundColor", new ArgbEvaluator(), FILTER, TRANSPARENT);
-//						transition.setDuration(TRANSITION_DURATION);
-//						transition.start();
-//						Handler handler = new Handler();
-//						handler.postDelayed(new Runnable() {
-//							@Override
-//							public void run() {
-//								_windowManager.removeView(_overlay);
-//							}
-//						}, TRANSITION_DURATION);
-//					} else {
-//						_windowManager.removeView(_overlay);
-//					}
 					ObjectAnimator transition = ObjectAnimator.ofObject(_overlay, "backgroundColor", new ArgbEvaluator(), FILTER, TRANSPARENT);
 					transition.setDuration(transitionDuration);
 					transition.start();
@@ -100,12 +79,12 @@ public class EyeProtectionOverlay {
 					_isShown = false;
 				}
 			} catch (IllegalStateException e) {
-
+				e.printStackTrace();
 			}
 		}
 	}
 
-	public static void toggleOverlay(final int transitionDuration) {
+	static void toggleOverlay(final int transitionDuration) {
 		if (_isShown) {
 			hideOverlay(transitionDuration);
 		} else {
