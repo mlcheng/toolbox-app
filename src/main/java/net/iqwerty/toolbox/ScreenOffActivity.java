@@ -28,7 +28,7 @@ public class ScreenOffActivity extends Activity {
 				intent.putExtra(DevicePolicyManager.EXTRA_ADD_EXPLANATION, getString(R.string.admin_permission_needed));
 				startActivity(intent);
 			}
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			e.printStackTrace();
 		}
 

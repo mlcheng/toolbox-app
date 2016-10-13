@@ -56,9 +56,7 @@ public class ScreenshotActivity extends Activity {
 
 			// Scan media
 			Util.scanMedia("file://" + path + filename);
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (InterruptedException e) {
+		} catch (final IOException | InterruptedException e) {
 			e.printStackTrace();
 		}
 	}

@@ -19,21 +19,20 @@ import android.view.WindowManager;
 
 class EyeProtectionOverlay {
 
-	// TODO: Fix this
-	private static Service _context;
-	private static View _overlay;
-	private static boolean _isShown;
-	private static WindowManager _windowManager;
+	private Service _context;
+	private View _overlay;
+	private boolean _isShown;
+	private WindowManager _windowManager;
 
-	private static final int FILTER = Color.argb(36, 255, 40, 30);
-	private static final int TRANSPARENT = Color.argb(0, 0, 0, 0);
+	private final int FILTER = Color.argb(36, 255, 40, 30);
+	private final int TRANSPARENT = Color.argb(0, 0, 0, 0);
 
-	public static void setContext(final Service context) {
+	EyeProtectionOverlay(final Service context) {
 		_context = context;
 		_windowManager = (WindowManager) _context.getSystemService(Context.WINDOW_SERVICE);
 	}
 
-	static void showOverlay(final int transitionDuration) {
+	void showOverlay(final int transitionDuration) {
 
 		if (!_isShown) {
 			_overlay = new View(_context);
@@ -62,7 +61,7 @@ class EyeProtectionOverlay {
 		}
 	}
 
-	static void hideOverlay(final int transitionDuration) {
+	void hideOverlay(final int transitionDuration) {
 		if (_overlay != null) {
 			try {
 				if (_isShown) {
@@ -84,7 +83,7 @@ class EyeProtectionOverlay {
 		}
 	}
 
-	static void toggleOverlay(final int transitionDuration) {
+	void toggleOverlay(final int transitionDuration) {
 		if (_isShown) {
 			hideOverlay(transitionDuration);
 		} else {
@@ -92,7 +91,7 @@ class EyeProtectionOverlay {
 		}
 	}
 
-	private static int getNavigationBarHeight() {
+	private int getNavigationBarHeight() {
 		Resources resources = _context.getResources();
 		int resourceId = resources.getIdentifier("navigation_bar_height", "dimen", "android");
 		if (resourceId > 0) {
@@ -101,7 +100,7 @@ class EyeProtectionOverlay {
 		return 0;
 	}
 
-	private static int getScreenHeight(final WindowManager wm) {
+	private int getScreenHeight(final WindowManager wm) {
 		Display display = wm.getDefaultDisplay();
 
 		Point size = new Point();
