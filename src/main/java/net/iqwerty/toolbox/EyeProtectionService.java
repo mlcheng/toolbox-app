@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
+import android.view.View;
 
 /**
  * Created by Michael on 10/10/2016.
@@ -13,13 +14,14 @@ import android.support.annotation.Nullable;
 
 public class EyeProtectionService extends Service {
 
-	private EyeProtectionOverlay _overlay;
+	private View _overlay = null;
 
 	@Override
 	public void onDestroy() {
 		Logger.log("Destroying service");
 
-		_overlay.hideOverlay(Config.OVERLAY_TRANSITION_NONE);
+		EyeProtectionOverlay overlay = EyeProtectionOverlay.getInstance();
+		overlay.hideOverlay(this, _overlay, Config.OVERLAY_TRANSITION_NONE);
 		_overlay = null;
 
 		super.onDestroy();
@@ -30,20 +32,21 @@ public class EyeProtectionService extends Service {
 		Logger.log("Starting service");
 		super.onStartCommand(intent, flags, startId);
 
-		_overlay = new EyeProtectionOverlay(this);
+		EyeProtectionOverlay overlay = EyeProtectionOverlay.getInstance();
 
 		if (intent != null) {
 			Bundle extras = intent.getExtras();
 			if (extras != null) {
 				if (extras.getBoolean(Config.SERVICE_TOGGLE)) {
 					// From notification toggle
-					_overlay.toggleOverlay(Config.OVERLAY_TRANSITION_SHORT);
+					_overlay = overlay.toggleOverlay(this, _overlay, Config.OVERLAY_TRANSITION_SHORT);
 				} else if (extras.getBoolean(Config.SERVICE_ON)) {
 					// From alarm
-					_overlay.showOverlay(Config.OVERLAY_TRANSITION_LONG);
+					_overlay = overlay.showOverlay(this, Config.OVERLAY_TRANSITION_LONG);
 				} else if (extras.getBoolean(Config.SERVICE_OFF)) {
 					// From alarm
-					_overlay.hideOverlay(Config.OVERLAY_TRANSITION_LONG);
+					overlay.hideOverlay(this, _overlay, Config.OVERLAY_TRANSITION_LONG);
+					_overlay = null;
 				}
 			} else {
 				Sleeper sleeper = new Sleeper(this);
@@ -51,9 +54,9 @@ public class EyeProtectionService extends Service {
 
 				// From service start
 				if (sleeper.shouldShowOverlay()) {
-					_overlay.showOverlay(Config.OVERLAY_TRANSITION_SHORT);
+					_overlay = overlay.showOverlay(this, Config.OVERLAY_TRANSITION_SHORT);
 				} else {
-					_overlay.hideOverlay(Config.OVERLAY_TRANSITION_SHORT);
+					overlay.hideOverlay(this, _overlay, Config.OVERLAY_TRANSITION_SHORT);
 				}
 
 				startForeground(1, sleeper.getNotification().build());

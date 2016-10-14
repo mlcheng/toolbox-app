@@ -27,11 +27,11 @@ class Sleeper {
 	void start() {
 		PendingIntent morning = newPendingIntent(2, Config.SERVICE_OFF);
 		PendingIntent night = newPendingIntent(1, Config.SERVICE_ON);
-		PendingIntent toggleService = newPendingIntent(0, Config.SERVICE_TOGGLE);
+		PendingIntent toggle = newPendingIntent(0, Config.SERVICE_TOGGLE);
 
 		setSchedules(Config.MORNING, morning, Config.NIGHT, night);
 
-		buildNotification(morning, night, toggleService);
+		buildNotification(morning, night, toggle);
 	}
 
 	boolean shouldShowOverlay() {
@@ -85,9 +85,10 @@ class Sleeper {
 
 	private void buildNotification(final PendingIntent morning, final PendingIntent night, final PendingIntent toggle) {
 		_notification = new NotificationCompat.Builder(_context.getApplicationContext())
-				.setSmallIcon(R.drawable.material_drawer_badge)
+				.setSmallIcon(R.drawable.ic_stat_overlay)
 				.setContentTitle(_context.getString(R.string.app_name))
 				.setContentText(_context.getString(R.string.app_name))
+				.setContentIntent(toggle)
 				.setPriority(Notification.PRIORITY_MIN);
 	}
 

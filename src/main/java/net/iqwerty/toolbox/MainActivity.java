@@ -18,6 +18,11 @@ public class MainActivity extends AppCompatActivity {
 
 		NavigationDrawer.setupNavigationDrawer(this);
 
+		if (Util.serviceIsRunning(getApplicationContext(), EyeProtectionService.class)) {
+			Logger.log("Service is already running");
+			return;
+		}
+
 		if (PermissionManager.canDrawOverlays(this)) {
 			startService(new Intent(this, EyeProtectionService.class));
 		} else {

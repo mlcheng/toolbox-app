@@ -5,6 +5,8 @@ package net.iqwerty.toolbox;
  */
 
 class Config {
+	static final boolean DEBUG = true;
+
 	static final String APP = "Toolbox";
 	static final String PACKAGE_NAME = "net.iqwerty.toolbox";
 	static final String SERVICE_TOGGLE = PACKAGE_NAME + ".toggle";

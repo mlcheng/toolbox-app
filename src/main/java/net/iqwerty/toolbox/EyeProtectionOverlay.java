@@ -19,80 +19,87 @@ import android.view.WindowManager;
 
 class EyeProtectionOverlay {
 
-	private Service _context;
-	private View _overlay;
-	private boolean _isShown;
-	private WindowManager _windowManager;
+	private static EyeProtectionOverlay instance = null;
 
 	private final int FILTER = Color.argb(36, 255, 40, 30);
 	private final int TRANSPARENT = Color.argb(0, 0, 0, 0);
 
-	EyeProtectionOverlay(final Service context) {
-		_context = context;
-		_windowManager = (WindowManager) _context.getSystemService(Context.WINDOW_SERVICE);
+	private EyeProtectionOverlay() {
 	}
 
-	void showOverlay(final int transitionDuration) {
-
-		if (!_isShown) {
-			_overlay = new View(_context);
-			ObjectAnimator transition = ObjectAnimator.ofObject(_overlay, "backgroundColor", new ArgbEvaluator(), TRANSPARENT, FILTER);
-			transition.setDuration(transitionDuration);
-			transition.start();
-
-			WindowManager.LayoutParams params = new WindowManager.LayoutParams(
-					WindowManager.LayoutParams.MATCH_PARENT, // Can't be wrap content otherwise some parts won't get filtered (left and right)
-					getScreenHeight(_windowManager) + (getNavigationBarHeight() * 4),
-					0,
-					0,
-					WindowManager.LayoutParams.TYPE_SYSTEM_OVERLAY,
-					WindowManager.LayoutParams.FLAG_FULLSCREEN
-							| WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
-							| WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
-							| WindowManager.LayoutParams.FLAG_LAYOUT_INSET_DECOR
-							| WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN
-							| WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
-					//WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN | WindowManager.LayoutParams.FLAG_FULLSCREEN | WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
-					PixelFormat.TRANSLUCENT
-			);
-
-			_windowManager.addView(_overlay, params);
-			_isShown = true;
+	// The singleton class
+	static EyeProtectionOverlay getInstance() {
+		if (instance == null) {
+			return new EyeProtectionOverlay();
 		}
+		return instance;
 	}
 
-	void hideOverlay(final int transitionDuration) {
-		if (_overlay != null) {
+	View showOverlay(final Service context, final int transitionDuration) {
+		View overlay;
+		final WindowManager windowManager = getWindowManager(context);
+
+		overlay = new View(context);
+		ObjectAnimator transition = ObjectAnimator.ofObject(overlay, "backgroundColor", new ArgbEvaluator(), TRANSPARENT, FILTER);
+		transition.setDuration(transitionDuration);
+		transition.start();
+
+		WindowManager.LayoutParams params = new WindowManager.LayoutParams(
+				WindowManager.LayoutParams.MATCH_PARENT, // Can't be wrap content otherwise some parts won't get filtered (left and right)
+				getScreenHeight(windowManager) + (getNavigationBarHeight(context) * 4),
+				0,
+				0,
+				WindowManager.LayoutParams.TYPE_SYSTEM_OVERLAY,
+				WindowManager.LayoutParams.FLAG_FULLSCREEN
+						| WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
+						| WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
+						| WindowManager.LayoutParams.FLAG_LAYOUT_INSET_DECOR
+						| WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN
+						| WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
+				//WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN | WindowManager.LayoutParams.FLAG_FULLSCREEN | WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+				PixelFormat.TRANSLUCENT
+		);
+
+		windowManager.addView(overlay, params);
+		return overlay;
+	}
+
+	void hideOverlay(final Service context, final View overlay, final int transitionDuration) {
+		final WindowManager windowManager = getWindowManager(context);
+		if (overlay != null) {
 			try {
-				if (_isShown) {
-					ObjectAnimator transition = ObjectAnimator.ofObject(_overlay, "backgroundColor", new ArgbEvaluator(), FILTER, TRANSPARENT);
-					transition.setDuration(transitionDuration);
-					transition.start();
-					Handler handler = new Handler();
-					handler.postDelayed(new Runnable() {
-						@Override
-						public void run() {
-							_windowManager.removeView(_overlay);
-						}
-					}, transitionDuration);
-					_isShown = false;
-				}
+				ObjectAnimator transition = ObjectAnimator.ofObject(overlay, "backgroundColor", new ArgbEvaluator(), FILTER, TRANSPARENT);
+				transition.setDuration(transitionDuration);
+				transition.start();
+				Handler handler = new Handler();
+				handler.postDelayed(new Runnable() {
+					@Override
+					public void run() {
+						windowManager.removeView(overlay);
+					}
+				}, transitionDuration);
 			} catch (IllegalStateException e) {
 				e.printStackTrace();
 			}
 		}
 	}
 
-	void toggleOverlay(final int transitionDuration) {
-		if (_isShown) {
-			hideOverlay(transitionDuration);
+	View toggleOverlay(final Service context, final View overlay, final int transitionDuration) {
+		Logger.log("Overlay is shown: " + (overlay != null));
+		if (overlay != null) {
+			hideOverlay(context, overlay, transitionDuration);
+			return null;
 		} else {
-			showOverlay(transitionDuration);
+			return showOverlay(context, transitionDuration);
 		}
 	}
 
-	private int getNavigationBarHeight() {
-		Resources resources = _context.getResources();
+	private WindowManager getWindowManager(final Service context) {
+		return (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+	}
+
+	private int getNavigationBarHeight(final Service context) {
+		Resources resources = context.getResources();
 		int resourceId = resources.getIdentifier("navigation_bar_height", "dimen", "android");
 		if (resourceId > 0) {
 			return resources.getDimensionPixelSize(resourceId);
