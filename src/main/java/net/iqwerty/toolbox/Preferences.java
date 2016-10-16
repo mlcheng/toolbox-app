@@ -16,29 +16,50 @@ class Preferences {
 	}
 
 	static Preferences getInstance() {
-		if(instance == null) {
+		if (instance == null) {
 			return new Preferences();
 		}
 		return instance;
 	}
 
-	static void save(Context context, String key, Object value) {
-		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-		SharedPreferences.Editor editor = preferences.edit();
-		if(value instanceof String) {
-			editor.putString(key, (String) value);
-		} else if(value instanceof Boolean) {
-			editor.putBoolean(key, (Boolean) value);
-		}
-		editor.apply();
+	void saveString(Context context, String key, String value) {
+		getPreferenceEditor(context).putString(key, value).apply();
 	}
 
-	static <T extends Object> T get(Context context, String key, T type) {
-		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-		if(type == String.class) {
-			preferences.getString(key, null);
-		}
-
-		return null;
+	void saveBoolean(Context context, String key, boolean value) {
+		getPreferenceEditor(context).putBoolean(key, value).apply();
 	}
+
+	void saveInt(Context context, String key, int value) {
+		getPreferenceEditor(context).putInt(key, value).apply();
+	}
+
+	String getString(Context context, String key) {
+		return getPreferenceManager(context).getString(key, null);
+	}
+
+	boolean getBoolean(Context context, String key) {
+		return getPreferenceManager(context).getBoolean(key, false);
+	}
+
+	int getInt(Context context, String key) {
+		return getPreferenceManager(context).getInt(key, Integer.MIN_VALUE);
+	}
+
+	private SharedPreferences getPreferenceManager(Context context) {
+		return PreferenceManager.getDefaultSharedPreferences(context);
+	}
+
+	private SharedPreferences.Editor getPreferenceEditor(Context context) {
+		return getPreferenceManager(context).edit();
+	}
+
+//	<T extends Object> T get(Context context, String key, T type) {
+//		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+//		if (type == String.class) {
+//			return (T) preferences.getString(key, null);
+//		}
+//
+//		return null;
+//	}
 }

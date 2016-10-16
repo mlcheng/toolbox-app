@@ -77,7 +77,7 @@ class NavigationDrawer {
 							_navigationDrawer.closeDrawer();
 							return true;
 						}
-						
+
 						switch (position) {
 							case 0:
 								// Home

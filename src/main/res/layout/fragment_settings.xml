@@ -28,24 +28,28 @@
 				android:orientation="horizontal">
 
 				<android.support.design.widget.TextInputEditText
+					android:id="@+id/setting_overlay_color_alpha"
 					android:layout_width="0dp"
 					android:layout_height="wrap_content"
 					android:layout_weight=".25"
 					android:hint="@string/setting_overlay_color_alpha"/>
 
 				<android.support.design.widget.TextInputEditText
+					android:id="@+id/setting_overlay_color_red"
 					android:layout_width="0dp"
 					android:layout_height="wrap_content"
 					android:layout_weight=".25"
 					android:hint="@string/setting_overlay_color_red"/>
 
 				<android.support.design.widget.TextInputEditText
+					android:id="@+id/setting_overlay_color_green"
 					android:layout_width="0dp"
 					android:layout_height="wrap_content"
 					android:layout_weight=".25"
 					android:hint="@string/setting_overlay_color_green"/>
 
 				<android.support.design.widget.TextInputEditText
+					android:id="@+id/setting_overlay_color_blue"
 					android:layout_width="0dp"
 					android:layout_height="wrap_content"
 					android:layout_weight=".25"
@@ -55,6 +59,7 @@
 		</LinearLayout>
 
 		<FrameLayout
+			android:id="@+id/stretch"
 			android:layout_width="0dp"
 			android:layout_height="0dp"
 			android:layout_weight="1"/>
@@ -65,6 +70,7 @@
 			android:orientation="horizontal">
 
 			<Button
+				android:id="@+id/setting_save"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:text="@string/settings_save"/>

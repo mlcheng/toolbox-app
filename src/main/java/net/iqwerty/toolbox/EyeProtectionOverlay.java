@@ -21,7 +21,6 @@ class EyeProtectionOverlay {
 
 	private static EyeProtectionOverlay instance = null;
 
-	private final int FILTER = Color.argb(36, 255, 40, 30);
 	private final int TRANSPARENT = Color.argb(0, 0, 0, 0);
 
 	private EyeProtectionOverlay() {
@@ -39,8 +38,10 @@ class EyeProtectionOverlay {
 		View overlay;
 		final WindowManager windowManager = getWindowManager(context);
 
+		Logger.log(Integer.toString(getFilterColor(context)));
+
 		overlay = new View(context);
-		ObjectAnimator transition = ObjectAnimator.ofObject(overlay, "backgroundColor", new ArgbEvaluator(), TRANSPARENT, FILTER);
+		ObjectAnimator transition = ObjectAnimator.ofObject(overlay, "backgroundColor", new ArgbEvaluator(), TRANSPARENT, getFilterColor(context));
 		transition.setDuration(transitionDuration);
 		transition.start();
 
@@ -68,7 +69,7 @@ class EyeProtectionOverlay {
 		final WindowManager windowManager = getWindowManager(context);
 		if (overlay != null) {
 			try {
-				ObjectAnimator transition = ObjectAnimator.ofObject(overlay, "backgroundColor", new ArgbEvaluator(), FILTER, TRANSPARENT);
+				ObjectAnimator transition = ObjectAnimator.ofObject(overlay, "backgroundColor", new ArgbEvaluator(), getFilterColor(context), TRANSPARENT);
 				transition.setDuration(transitionDuration);
 				transition.start();
 				Handler handler = new Handler();
@@ -114,5 +115,14 @@ class EyeProtectionOverlay {
 		display.getSize(size);
 
 		return size.y;
+	}
+
+	private int getFilterColor(final Service context) {
+		return Color.argb(
+				Util.restoreOverlayColorFor(Config.SETTING_OVERLAY_COLOR_ALPHA, context),
+				Util.restoreOverlayColorFor(Config.SETTING_OVERLAY_COLOR_RED, context),
+				Util.restoreOverlayColorFor(Config.SETTING_OVERLAY_COLOR_GREEN, context),
+				Util.restoreOverlayColorFor(Config.SETTING_OVERLAY_COLOR_BLUE, context)
+		);
 	}
 }

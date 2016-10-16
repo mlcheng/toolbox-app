@@ -13,6 +13,8 @@
 	<string name="hello">Welcome to Toolbox!</string>
 
 	<string name="settings_save">Save</string>
+	<string name="settings_alpha_max">Max alpha value is 200, otherwise you can\'t see your screen!</string>
+
 	<string name="setting_overlay_color">Overlay color</string>
 	<string name="setting_overlay_color_alpha">Alpha</string>
 	<string name="setting_overlay_color_red">Red</string>
