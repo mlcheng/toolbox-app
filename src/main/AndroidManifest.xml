@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest
-	xmlns:android="http://schemas.android.com/apk/res/android"
-	package="net.iqwerty.toolbox">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          package="net.iqwerty.toolbox">
 
 	<uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
 	<uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
@@ -15,7 +14,6 @@
 		android:label="@string/app_name"
 		android:supportsRtl="true"
 		android:theme="@style/AppTheme">
-
 		<service android:name=".EyeProtectionService"/>
 
 		<receiver
@@ -26,31 +24,26 @@
 			<meta-data
 				android:name="android.app.device_admin"
 				android:resource="@xml/device_admin"/>
+
 			<intent-filter>
 				<action android:name="android.app.action.DEVICE_ADMIN_ENABLED"/>
 			</intent-filter>
 		</receiver>
-
-		<receiver
-			android:name=".BootReceiver">
+		<receiver android:name=".BootReceiver">
 			<intent-filter>
 				<action android:name="android.intent.action.BOOT_COMPLETED"/>
 				<action android:name="android.intent.action.QUICKBOOT_POWERON"/>
 			</intent-filter>
 		</receiver>
-
-		<receiver
-			android:name=".AlarmReceiver">
+		<receiver android:name=".AlarmReceiver">
 		</receiver>
 
-		<activity
-			android:name=".MainActivity">
+		<activity android:name=".MainActivity">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN"/>
 				<category android:name="android.intent.category.LAUNCHER"/>
 			</intent-filter>
 		</activity>
-
 		<activity
 			android:name=".ScreenOffActivity"
 			android:excludeFromRecents="true"
@@ -60,7 +53,6 @@
 				<action android:name="android.intent.action.MAIN"/>
 			</intent-filter>
 		</activity>
-
 		<activity
 			android:name=".ScreenshotActivity"
 			android:excludeFromRecents="true"
@@ -70,7 +62,6 @@
 				<action android:name="android.intent.action.MAIN"/>
 			</intent-filter>
 		</activity>
-
 	</application>
 
 </manifest>

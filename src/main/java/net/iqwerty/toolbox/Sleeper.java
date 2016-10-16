@@ -25,13 +25,19 @@ class Sleeper {
 	}
 
 	void start() {
-		PendingIntent morning = newPendingIntent(2, Config.SERVICE_OFF);
-		PendingIntent night = newPendingIntent(1, Config.SERVICE_ON);
-		PendingIntent toggle = newPendingIntent(0, Config.SERVICE_TOGGLE);
+		PendingIntent morning = newServicePendingIntent(2, Config.SERVICE_OFF);
+		PendingIntent night = newServicePendingIntent(1, Config.SERVICE_ON);
+		PendingIntent toggle = newServicePendingIntent(0, Config.SERVICE_TOGGLE);
+		PendingIntent screenshot = PendingIntent.getActivity(
+				_context,
+				3,
+				new Intent(_context, ScreenshotActivity.class),
+				0
+		);
 
 		setSchedules(Config.MORNING, morning, Config.NIGHT, night);
 
-		buildNotification(morning, night, toggle);
+		buildNotification(toggle, screenshot);
 	}
 
 	boolean shouldShowOverlay() {
@@ -83,12 +89,16 @@ class Sleeper {
 		return alarm;
 	}
 
-	private void buildNotification(final PendingIntent morning, final PendingIntent night, final PendingIntent toggle) {
+	private void buildNotification(final PendingIntent toggle, final PendingIntent screenshot) {
 		_notification = new NotificationCompat.Builder(_context.getApplicationContext())
 				.setSmallIcon(R.drawable.ic_stat_overlay)
 				.setContentTitle(_context.getString(R.string.app_name))
-				.setContentText(_context.getString(R.string.app_name))
+				.setContentText(_context.getString(R.string.toggle_filter))
 				.setContentIntent(toggle)
+				.setStyle(new NotificationCompat.BigTextStyle()
+						.bigText(_context.getString(R.string.toggle_filter))
+				)
+				.addAction(R.drawable.ic_stat_screenshot, _context.getString(R.string.take_screenshot), screenshot)
 				.setPriority(Notification.PRIORITY_MIN);
 	}
 
@@ -96,7 +106,7 @@ class Sleeper {
 		return _notification;
 	}
 
-	private PendingIntent newPendingIntent(final int requestCode, final String extra) {
+	private PendingIntent newServicePendingIntent(final int requestCode, final String extra) {
 		return PendingIntent.getService(_context, requestCode, new Intent(
 				_context,
 				EyeProtectionService.class
