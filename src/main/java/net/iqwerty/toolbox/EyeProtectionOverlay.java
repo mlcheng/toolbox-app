@@ -38,8 +38,6 @@ class EyeProtectionOverlay {
 		View overlay;
 		final WindowManager windowManager = getWindowManager(context);
 
-		Logger.log(Integer.toString(getFilterColor(context)));
-
 		overlay = new View(context);
 		ObjectAnimator transition = ObjectAnimator.ofObject(overlay, "backgroundColor", new ArgbEvaluator(), TRANSPARENT, getFilterColor(context));
 		transition.setDuration(transitionDuration);
